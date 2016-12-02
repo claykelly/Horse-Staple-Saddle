@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Team9.Models.HomeIndexViewModel>
+﻿@model IEnumerable<HomeIndexViewModel>
     @using Team9.Models
 @{
     ViewBag.Title = "Index";
@@ -22,7 +22,7 @@
                     Song Price
                 </th>
                 <th>
-                    Song Album
+                    Song Album(s)
                 </th>
                 <th>
                     Song Artist(s)
@@ -43,7 +43,12 @@
 
                         <td>@Html.DisplayFor(modelItem => item.Song.SongPrice)</td>
 
-                        <td>@Html.ActionLink(item.Song.SongAlbum.AlbumName, "Details", "Albums", new { id = item.Song.SongAlbum.AlbumID }, null)</td>
+                        <td>
+                            @foreach (Album a in item.Song.SongAlbums)
+                            {
+                                <span>@Html.ActionLink(a.AlbumName, "Details", "Albums", new { id = a.AlbumID }, null) *</span>
+                            }
+                        </td>
 
                         <td>
                             @foreach (Artist a in item.Song.SongArtist)

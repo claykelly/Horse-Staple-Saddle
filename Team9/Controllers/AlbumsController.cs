@@ -508,14 +508,14 @@ namespace Team9.Controllers
                     {
                         AlbumIndexViewModel ab = new AlbumIndexViewModel();
                         ab.Album = a;
-                        ab.AlbumRating = d.ToString();//Change to string
+                        ab.AlbumRating = d.ToString("0.0");//Change to string
                         AlbumsDisplay_ascend.Add(ab);
                     }
                     else
                     {
                         AlbumIndexViewModel ab = new AlbumIndexViewModel();
                         ab.Album = a;
-                        ab.AlbumRating = d.ToString();//change to string
+                        ab.AlbumRating = d.ToString("0.0");//change to string
                         AlbumsDisplay_descend.Add(ab);
                     }
                 }
@@ -543,7 +543,7 @@ namespace Team9.Controllers
                 Decimal d = getAverageRating(a.AlbumID);
                 AlbumIndexViewModel ab = new AlbumIndexViewModel();
                 ab.Album = a;
-                ab.AlbumRating = d.ToString();// change to string
+                ab.AlbumRating = d.ToString("0.0");// change to string
                 AlbumsList.Add(ab);
             }
 

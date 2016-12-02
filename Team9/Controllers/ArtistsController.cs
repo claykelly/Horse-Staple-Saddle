@@ -148,14 +148,14 @@ namespace Team9.Controllers
                     {
                         ArtistIndexViewModel ab = new ArtistIndexViewModel();
                         ab.Artist = a;
-                        ab.ArtistRating = d.ToString();
+                        ab.ArtistRating = d.ToString("0.0");
                         ArtistsDisplay_ascend.Add(ab);
                     }
                     else
                     {
                         ArtistIndexViewModel ab = new ArtistIndexViewModel();
                         ab.Artist = a;
-                        ab.ArtistRating = d.ToString();
+                        ab.ArtistRating = d.ToString("0.0");
                         ArtistsDisplay_descend.Add(ab);
                     }
                 }
@@ -182,7 +182,7 @@ namespace Team9.Controllers
                 Decimal d = getAverageRating(a.ArtistID);
                     ArtistIndexViewModel ab = new ArtistIndexViewModel();
                     ab.Artist = a;
-                    ab.ArtistRating = d.ToString();
+                    ab.ArtistRating = d.ToString("0.0");
                     ArtistsList.Add(ab);
                 }
 
