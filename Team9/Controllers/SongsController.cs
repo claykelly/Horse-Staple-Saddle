@@ -265,61 +265,15 @@ namespace Team9.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "SongID,SongName,SongPrice,SongLength,isDiscoutned,isFeatured,DiscountPrice")]
-                                        Song song, int? AlbumID, int[] SelectedArtist, int[] SelectedGenre)
+                                        Song @song)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    db.Songs.Add(song);
-            //    db.SaveChanges();
-            //    return RedirectToAction("Index");
-            //}
-
-            //return View(song);
-
-
             if (ModelState.IsValid)
             {
-                Song songToAdd = song;
-                if (AlbumID != 0)
-                {
-                    //new AlbumID
-                    Album SelectedAlbum = db.Albums.Find(AlbumID);
-                    //update album
-                    songToAdd.SongAlbums[0] = SelectedAlbum;
-                }
-                //if there are members to add then add them
-                if (SelectedArtist != null)
-                {
-                    foreach (int ArtistID in SelectedArtist)
-                    {
-                        Artist artistToAdd = db.Artists.Find(ArtistID);
-                        songToAdd.SongArtist.Add(artistToAdd);
-                    }
-                }
-
-                //if there are genres to add then add them
-                if (SelectedGenre != null)
-                {
-                    foreach (int GenreID in SelectedGenre)
-                    {
-                        Genre genreToAdd = db.Genres.Find(GenreID);
-                        songToAdd.SongGenre.Add(genreToAdd);
-                    }
-                }
-
-                songToAdd.SongName = song.SongName;
-                songToAdd.SongPrice = song.SongPrice;
-                songToAdd.SongLength = song.SongLength;
-                songToAdd.SongRatings = song.SongRatings;
-                songToAdd.isDiscoutned = song.isDiscoutned;
-                songToAdd.isFeatured = song.isFeatured;
-                songToAdd.DiscountPrice = song.DiscountPrice;
-
-                db.Entry(songToAdd).State = EntityState.Modified;
+                db.Songs.Add(@song);
                 db.SaveChanges();
-                return RedirectToAction("Index");
-
+                return RedirectToAction("Edit", new { id = @song.SongID });
             }
+
             ViewBag.AllAlbums = GetAllAlbums(@song);
             ViewBag.AllArtist = GetAllArtist(@song);
             ViewBag.AllGenres = GetAllGenres(@song);
