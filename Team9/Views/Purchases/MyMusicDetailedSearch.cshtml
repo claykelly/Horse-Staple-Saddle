@@ -5,9 +5,9 @@
     ViewBag.Title = "MyMusicDetailedSearch";
 }
 
-<h2>MyMusicDetailedSearch</h2>
+<h2>My Music Advanced Search</h2>
 
-@using (Html.BeginForm("MyMusicSearchResults", "Purchase", FormMethod.Get))
+@using (Html.BeginForm("MyMusicSearchResults", "Purchases", FormMethod.Get))
 {
     <p class="form-group">
         Song, Album or Artist Name: @Html.TextBox("SongSearchString", null, new { @class = "form-control" }) <br />

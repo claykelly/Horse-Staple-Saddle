@@ -553,7 +553,7 @@ namespace Team9.Controllers
 
 
         // GET: myMusic
-        public ActionResult myMusic()
+        public ActionResult myMusic(string SongString)
         {
             String CurrentUserId = User.Identity.GetUserId();
             var query = from p in db.Purchases
@@ -565,13 +565,13 @@ namespace Team9.Controllers
             // Create a list of selected albums
             List<Purchase> Purchases = query.ToList();
             List<Song> mySongs = new List<Song>();
-            foreach(Purchase p in Purchases)
+            foreach (Purchase p in Purchases)
             {
-                foreach(PurchaseItem pi in p.PurchaseItems)
+                foreach (PurchaseItem pi in p.PurchaseItems)
                 {
                     if (pi.isAlbum)
                     {
-                        foreach(Song s in pi.PurchaseItemAlbum.Songs)
+                        foreach (Song s in pi.PurchaseItemAlbum.Songs)
                         {
                             mySongs.Add(s);
                         }
@@ -582,26 +582,243 @@ namespace Team9.Controllers
                     }
                 }
             }
-
-            //Create a view bag to store the number of selected albums
-            ViewBag.TotalSongCount = mySongs.Count();
-
-            List<SongIndexViewModel> SongsDisplay = new List<SongIndexViewModel>();
-
-            foreach (Song a in mySongs)
+            List<Song> DisplaySongs;
+            if (SongString == null || SongString == "") // they didn't select anything
             {
-                SongIndexViewModel AVM = new SongIndexViewModel();
-
-                AVM.Song = a;
-
-                AVM.SongRating = getAverageSongRating(a.SongID).ToString("0.0");
-
-                SongsDisplay.Add(AVM);
+                DisplaySongs = mySongs;
 
             }
+            else //they picked something
+            {
+                //use linq to display searched names
+                //mySongs = mySongs.ToList();
+                DisplaySongs = new List<Song>();
+                foreach (Song s in mySongs)
+                {
+                    if (s.SongName.Contains(SongString) || s.SongArtist.Any(r => r.ArtistName.Contains(SongString)))
+                    {
+                        DisplaySongs.Add(s);
+                    }
+                }
 
-            return View(SongsDisplay);
+                foreach (Song s in mySongs)
+                {
+                    if (s.SongAlbum != null)
+                    {
+                        if (s.SongAlbum.AlbumName.Contains(SongString))
+                        {
+                            DisplaySongs.Add(s);
+                        }
+                    }
+                }
+                //mySongs.Clear();
+
+                //Create selected count of customers
+                ViewBag.SelectedSongCount = DisplaySongs.Count();
+
+                //order the record to display sorted by lastname, first name, average sales
+                // mySongs.OrderBy(a => a.SongName);
+            }
+
+            return View(DisplaySongs);
         }
+
+        public ActionResult MyMusicDetailedSearch()
+        {
+            ViewBag.SelectedGenre = GetAllGenres();
+            return View();
+        }
+
+        public ActionResult MyMusicSearchResults(string SongSearchString, Int32[] SelectedGenre)
+        {
+            String CurrentUserId = User.Identity.GetUserId();
+            var query = from p in db.Purchases
+                        where p.isPurchased == true && (p.PurchaseUser.Id == CurrentUserId || p.GiftUser.Id == CurrentUserId)
+                        select p;
+
+            // Create a list of selected albums
+            List<Purchase> Purchases = query.ToList();
+            List<Song> mySongs = new List<Song>();
+            foreach (Purchase p in Purchases)
+            {
+                foreach (PurchaseItem pi in p.PurchaseItems)
+                {
+                    if (pi.isAlbum)
+                    {
+                        foreach (Song s in pi.PurchaseItemAlbum.Songs)
+                        {
+                            mySongs.Add(s);
+                        }
+                    }
+                    else
+                    {
+                        mySongs.Add(pi.PurchaseItemSong);
+                    }
+                }
+            }
+            List<Song> DisplaySongs;
+            if (SongSearchString == null || SongSearchString == "") // no search string inputted
+            {
+                if (SelectedGenre == null) //no genre was selected either
+                {
+                    ViewBag.SelectedGenre = "No genres were selected";
+                    DisplaySongs = mySongs.ToList();
+                    return View("MyMusic", DisplaySongs); // show all purchases
+                }
+                else // a genre was selected but a search string was not; search mySongs against selectedGenre
+                {
+                    String strSelectedGenre = "The selected genre(s) is/are: ";
+
+                    //get list of genres
+                    ViewBag.AllGenres = GetAllGenres();
+
+                    DisplaySongs = new List<Song>(); // create empty displaysongs list
+                    foreach (Song s in mySongs) // loop through all songs in mySongs
+                    {
+                        foreach (int GenreID in SelectedGenre) // check each song on mySong against each genreID in SelectedGenre
+                        {
+                            if (s.SongGenre.Any(g => g.GenreID == GenreID)) //if any SongGenres on eachs in mysongs
+                            {                                               // equals genre in selectedgenres, then add to displaysongs list
+                                DisplaySongs.Add(s);
+                            }
+                        }
+                    }
+                    ViewBag.SelectedGenre = strSelectedGenre;
+                    return View("MyMusic", DisplaySongs);
+                }
+            }
+            else //SongSearchString is not null
+            {
+                //use linq to display searched names
+                DisplaySongs = new List<Song>();
+                foreach (Song s in mySongs)
+                {
+                    if (s.SongName.Contains(SongSearchString) || s.SongArtist.Any(r => r.ArtistName.Contains(SongSearchString)))
+                    {
+
+                        String strSelectedGenre = "The selected genre(s) is/are: ";
+
+                        //get list of genres
+                        ViewBag.AllGenres = GetAllGenres();
+
+                        //foreach (Song x in mySongs) // loop through all songs in mySongs
+                        //{
+                            foreach (int GenreID in SelectedGenre) // check each song on mySong against each genreID in SelectedGenre
+                            {
+                                if (s.SongGenre.Any(g => g.GenreID == GenreID)) //if any SongGenres on eachs in mysongs
+                                {                                               // equals genre in selectedgenres, then add to displaysongs list
+                                    DisplaySongs.Add(s);
+                                }
+                            }
+                        //}
+                        ViewBag.SelectedGenre = strSelectedGenre;
+                    }
+                }
+
+                foreach (Song s in mySongs)
+                {
+                    if (s.SongAlbum != null)
+                    {
+                        if (s.SongAlbum.AlbumName.Contains(SongSearchString))
+                        {
+                            String strSelectedGenre = "The selected genre(s) is/are: ";
+
+                            //get list of genres
+                            ViewBag.AllGenres = GetAllGenres();
+
+                            //foreach (Song x in mySongs) // loop through all songs in mySongs
+                            //{
+                                foreach (int GenreID in SelectedGenre) // check each song on mySong against each genreID in SelectedGenre
+                                {
+                                    if (s.SongGenre.Any(g => g.GenreID == GenreID)) //if any SongGenres on eachs in mysongs
+                                    {                                               // equals genre in selectedgenres, then add to displaysongs list
+                                        DisplaySongs.Add(s);
+                                    }
+                                }
+                            //}
+                            ViewBag.SelectedGenre = strSelectedGenre;
+                        }
+                    }
+                    return View("MyMusic", DisplaySongs);
+                }
+
+                if (SelectedGenre == null) //no genre was selected
+                {
+                    ViewBag.SelectedGenre = "No genres were selected";
+                    DisplaySongs = new List<Song>();
+                    foreach (Song s in mySongs)
+                    {
+                        if (s.SongName.Contains(SongSearchString) || s.SongArtist.Any(r => r.ArtistName.Contains(SongSearchString)))
+                        {
+                            DisplaySongs.Add(s);
+                        }
+                    }
+
+                    foreach (Song s in mySongs)
+                    {
+                        if (s.SongAlbum != null)
+                        {
+                            if (s.SongAlbum.AlbumName.Contains(SongSearchString))
+                            {
+                                DisplaySongs.Add(s);
+                            }
+                        }
+                    }
+
+                    return View("MyMusic", DisplaySongs);
+                }
+                else
+                {
+                    String strSelectedGenre = "The selected genre(s) is/are: ";
+
+                    //get list of genres
+                    ViewBag.AllGenres = GetAllGenres();
+
+                    foreach (Song s in mySongs)
+                    {
+
+                        foreach (int GenreID in SelectedGenre)
+                        {
+                            if (s.SongGenre.Any(g => g.GenreID == GenreID))
+                            {
+                                DisplaySongs.Add(s);
+                            }
+                        }
+                    }
+
+                    ViewBag.SelectedGenre = strSelectedGenre;
+                }
+
+                //Create selected count of customers
+                ViewBag.SelectedSongCount = DisplaySongs.Count();
+
+                //order the record to display sorted by lastname, first name, average sales
+                // mySongs.OrderBy(a => a.SongName);
+            }
+
+            return View("MyMusic", DisplaySongs);
+
+        }
+
+        public MultiSelectList GetAllGenres()
+        {
+            var query = from g in db.Genres
+                        orderby g.GenreName
+                        select g;
+
+            //convert to list
+            List<Genre> GenreList = query.ToList();
+
+            //Add in choice for not selecting a frequency
+            Genre NoChoice = new Genre() { GenreID = 0, GenreName = "All Genres" };
+            GenreList.Add(NoChoice);
+
+            //convert to multiselect
+            MultiSelectList AllGenres = new MultiSelectList(GenreList.OrderBy(g => g.GenreName), "GenreID", "GenreName");
+
+            return AllGenres;
+        }
+
 
         // GET: Purchases/Delete/5
         public ActionResult Delete(int? id)
