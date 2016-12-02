@@ -10,9 +10,12 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using System.Collections.Generic;
+using Microsoft.Owin.Host.SystemWeb;
+using System.ComponentModel.DataAnnotations;
 
 namespace Team9.Controllers
 {
+    [AllowAnonymous]
     public class SongsController : Controller
     {
         private AppDbContext db = new AppDbContext();
@@ -160,6 +163,7 @@ namespace Team9.Controllers
         //[HttpPost, ActionName("addToCart")]
         //[ValidateAntiForgeryToken]
         //TODO: Add role validation
+        [Authorize(Roles = "Customer")]
         public ActionResult addSongToCart(int id)
         {
             String CurrentUserId = User.Identity.GetUserId();
@@ -248,6 +252,7 @@ namespace Team9.Controllers
         }
 
         // GET: Songs/Create
+        [Authorize(Roles = "Manager, Admin")]
         public ActionResult Create()
         {
             Song song = new Song();
@@ -262,6 +267,7 @@ namespace Team9.Controllers
         // POST: Songs/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "SongID,SongName,SongPrice,SongLength,isDiscoutned,isFeatured,DiscountPrice")]
@@ -279,9 +285,10 @@ namespace Team9.Controllers
             ViewBag.AllGenres = GetAllGenres(@song);
 
             return View(@song);
-        }        
+        }
 
         // GET: Songs/Edit/5
+        [Authorize(Roles = "Manager, Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -304,6 +311,7 @@ namespace Team9.Controllers
         // POST: Songs/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "SongID,SongName,SongPrice,SongLength,isDiscoutned,isFeatured,DiscountPrice")]
@@ -373,6 +381,7 @@ namespace Team9.Controllers
 
 
         // GET: Songs/Delete/5
+        [Authorize(Roles = "Manager, Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -388,6 +397,7 @@ namespace Team9.Controllers
         }
 
         // POST: Songs/Delete/5
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -399,6 +409,7 @@ namespace Team9.Controllers
         }
 
         // GET: Songs/ReviewSong/5
+        [Authorize(Roles = "Customer")]
         public ActionResult ReviewSong(int? id)
         {
             if (id == null)
@@ -416,6 +427,7 @@ namespace Team9.Controllers
         }
         // POST: Songs/ReviewSong/5
         //######################################################//
+        [Authorize(Roles = "Customer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ReviewSong([Bind(Include = "RatingID,RatingText,RatingValue,RatingSong_SongID")]

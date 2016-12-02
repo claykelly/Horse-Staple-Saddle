@@ -11,7 +11,7 @@ using Microsoft.AspNet.Identity;
 
 namespace Team9.Controllers
 {
-
+    [AllowAnonymous]
     public class ArtistsController : Controller
     {
         private AppDbContext db = new AppDbContext();
@@ -209,6 +209,7 @@ namespace Team9.Controllers
         }
 
         // GET: Artists/Create
+        [Authorize(Roles = "Manager, Admin")]
         public ActionResult Create()
         {
             Artist artist = new Artist();
@@ -218,6 +219,7 @@ namespace Team9.Controllers
         // POST: Artists/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ArtistID,ArtistName,isFeatured")] Artist @artist)
@@ -233,6 +235,7 @@ namespace Team9.Controllers
         }
 
         // GET: Artists/Edit/5
+        [Authorize(Roles = "Manager, Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -255,6 +258,7 @@ namespace Team9.Controllers
         // POST: Artists/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ArtistID,ArtistName,isFeatured")] Artist artist, int[] SelectedSongs, int[] SelectedAlbums, int[] SelectedGenres)
@@ -319,6 +323,7 @@ namespace Team9.Controllers
         }
 
         // GET: Artists/Delete/5
+        [Authorize(Roles = "Manager, Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -334,6 +339,7 @@ namespace Team9.Controllers
         }
 
         // POST: Artists/Delete/5
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -345,6 +351,7 @@ namespace Team9.Controllers
         }
 
         // GET: Artists/ReviewArtist/5
+        [Authorize]
         public ActionResult ReviewArtist(int? id)
         {
             if (id == null)
@@ -364,6 +371,7 @@ namespace Team9.Controllers
         // POST: Artists/ReviewArtist/5
         //TODO: creat the post method
         //######################################################//
+        [Authorize(Roles = "Customer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ReviewArtist([Bind(Include = "RatingID,RatingText,RatingValue,RatingArtist_ArtistID")]

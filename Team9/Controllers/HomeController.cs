@@ -10,6 +10,7 @@ using System.Net;
 //XXTODO: Change the namespace here to match your project's name
 namespace Team9.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private AppDbContext db = new AppDbContext();

@@ -14,6 +14,7 @@ namespace Team9.Controllers
 {
     public enum SortOrder { ascending, descending }
 
+    [AllowAnonymous]
     public class AlbumsController : Controller
     {
         private AppDbContext db = new AppDbContext();
@@ -134,6 +135,7 @@ namespace Team9.Controllers
 
         //GET: Add to cart
         // TODO: set up role requirements
+        [Authorize(Roles = "Customer")]
         public ActionResult addAlbumToCart(int id)
         {
             String CurrentUserId = User.Identity.GetUserId();
@@ -250,6 +252,7 @@ namespace Team9.Controllers
 
 
         // GET: Albums/Create
+        [Authorize(Roles = "Manager, Admin")]
         public ActionResult Create()
         {
             Album album = new Album();
@@ -259,6 +262,7 @@ namespace Team9.Controllers
         // POST: Albums/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "AlbumID,AlbumName,AlbumPrice,isDiscounted,isFeatured,DiscountAlbumPrice")]
@@ -275,6 +279,7 @@ namespace Team9.Controllers
         }
 
         // GET: Albums/Edit/5
+        [Authorize(Roles = "Manager, Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -297,6 +302,7 @@ namespace Team9.Controllers
         // POST: Albums/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "AlbumID,AlbumName,AlbumPrice,isDiscounted,isFeatured,DiscountAlbumPrice")]
@@ -367,6 +373,7 @@ namespace Team9.Controllers
         }
 
         // GET: Albums/Delete/5
+        [Authorize(Roles = "Manager, Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -382,6 +389,7 @@ namespace Team9.Controllers
         }
 
         // POST: Albums/Delete/5
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -393,6 +401,7 @@ namespace Team9.Controllers
         }
 
         // GET: Album/ReviewAlbum/5
+        [Authorize]
         public ActionResult ReviewAlbum(int? id)
         {
             if (id == null)
@@ -410,6 +419,7 @@ namespace Team9.Controllers
         }
         // POST: Album/ReviewAlbum/5
         //######################################################//
+        [Authorize(Roles = "Customers")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ReviewAlbum([Bind(Include = "RatingID,RatingText,RatingValue,RatingAlbum_AlbumID")]

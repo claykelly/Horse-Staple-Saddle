@@ -15,6 +15,7 @@ using System.Net.Mail;
 
 namespace Team9.Controllers
 {
+    [Authorize]
     public class PurchasesController : Controller
     {
         private AppDbContext db = new AppDbContext();
@@ -166,6 +167,7 @@ namespace Team9.Controllers
         }
 
         // GET: Purchases
+        [Authorize(Roles = "Customer")]
         public ActionResult Index()
         {
             String CurrentUserId = User.Identity.GetUserId();
@@ -295,6 +297,7 @@ namespace Team9.Controllers
         }
 
         // GET: Purchases/Details/5
+        [Authorize(Roles = "Customer")]
         public ActionResult Details(int? id)
         {
             //STARTS HERE
@@ -351,6 +354,7 @@ namespace Team9.Controllers
         }
 
         //POST for Purchase
+        [Authorize(Roles = "Customer")]
         [HttpPost]
         public ActionResult Details(PurchaseViewModel Purchase, Int32 CreditCardID, bool newCard, string newCardNumber)
         {
@@ -418,6 +422,7 @@ namespace Team9.Controllers
 
 
         // GET: Purchases/Gift/5
+        [Authorize(Roles = "Customer")]
         public ActionResult Gift(int? id)
         {
             //STARTS HERE
@@ -462,6 +467,7 @@ namespace Team9.Controllers
         }
 
         //POST for Gift
+        [Authorize(Roles = "Customer")]
         [HttpPost]
         public ActionResult Gift(PurchaseViewModel Purchase, Int32 CreditCardID, bool newCard, string newCardNumber, string giftEmail)
         {
@@ -555,6 +561,7 @@ namespace Team9.Controllers
 
 
         // GET: myMusic
+        [Authorize(Roles = "Customer")]
         public ActionResult myMusic(string SongString)
         {
             String CurrentUserId = User.Identity.GetUserId();
@@ -627,13 +634,13 @@ namespace Team9.Controllers
 
             return View(DisplaySongs);
         }
-
+        [Authorize(Roles = "Customer")]
         public ActionResult MyMusicDetailedSearch()
         {
             ViewBag.SelectedGenre = GetAllGenres();
             return View();
         }
-
+        [Authorize(Roles = "Customer")]
         public ActionResult MyMusicSearchResults(string SongSearchString, Int32[] SelectedGenre)
         {
             String CurrentUserId = User.Identity.GetUserId();
@@ -832,6 +839,7 @@ namespace Team9.Controllers
 
 
         // GET: Purchases/Delete/5
+        [Authorize(Roles = "Manager, Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -847,6 +855,7 @@ namespace Team9.Controllers
         }
 
         // POST: Purchases/Delete/5
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -867,6 +876,7 @@ namespace Team9.Controllers
         }
 
         // GET: Purchases
+        [Authorize]
         public ActionResult orderHistory()
         {
             String CurrentUserId = User.Identity.GetUserId();
@@ -908,12 +918,14 @@ namespace Team9.Controllers
             }
 
         //GET: ReportHome
+        [Authorize(Roles = "Manager, Admin")]
         public ActionResult ReportHome()
         {
             return View();
         }
 
         //GET: SongReports
+        [Authorize(Roles = "Manager, Admin")]
         public ActionResult songReport()
         {
             var query = from s in db.Songs
@@ -943,6 +955,7 @@ namespace Team9.Controllers
             return View(songReports);
         }
 
+        [Authorize(Roles = "Manager, Admin")]
         public ActionResult AlbumReport()
         {
             var query = from a in db.Albums
@@ -972,6 +985,7 @@ namespace Team9.Controllers
             return View(AlbumReports);
         }
 
+        [Authorize(Roles = "Manager, Admin")]
         public ActionResult genreReport()
         {
             var query = from g in db.Genres

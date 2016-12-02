@@ -10,11 +10,13 @@ using Team9.Models;
 
 namespace Team9.Controllers
 {
+    [Authorize]
     public class RatingsController : Controller
     {
         private AppDbContext db = new AppDbContext();
 
         // GET: Ratings
+        [Authorize(Roles = "Manager, Admin, Employee")]
         public ActionResult Index()
         {
             return View(db.Ratings.ToList());
@@ -36,6 +38,7 @@ namespace Team9.Controllers
         }
 
         // GET: Ratings/Create
+        [Authorize(Roles = "Customer")]
         public ActionResult Create()
         {
             return View();
@@ -44,6 +47,7 @@ namespace Team9.Controllers
         // POST: Ratings/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Customer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "RatingID,RatingText,RatingValue")] Rating rating, int? id)
@@ -60,6 +64,7 @@ namespace Team9.Controllers
         }
 
         // GET: Ratings/Edit/5
+        [Authorize(Roles = "Manager, Admin, Employee")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -77,6 +82,7 @@ namespace Team9.Controllers
         // POST: Ratings/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Manager, Admin, Employee")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "RatingID,RatingText,RatingValue")] Rating rating)
@@ -91,6 +97,7 @@ namespace Team9.Controllers
         }
 
         // GET: Ratings/Delete/5
+        [Authorize(Roles = "Manager, Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -106,6 +113,7 @@ namespace Team9.Controllers
         }
 
         // POST: Ratings/Delete/5
+        [Authorize(Roles = "Manager, Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

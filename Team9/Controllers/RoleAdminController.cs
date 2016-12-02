@@ -12,8 +12,8 @@ using Team9.Models;
 //TODOXX: Change the namespace here to match your project's name
 namespace Team9.Controllers
 {
-    //TODO: Once you have roles working, uncomment the tag below to limit access to this page
-    //[Authorize]
+    //xxTODO: Once you have roles working, uncomment the tag below to limit access to this page
+    [Authorize]
     public class RoleAdminController : Controller
     {
         //
