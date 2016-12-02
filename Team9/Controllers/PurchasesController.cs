@@ -76,13 +76,19 @@ namespace Team9.Controllers
         public void getCards(AppUser u)
         {
             List<CreditCard> userCards = new List<CreditCard>();
-            if (!u.CC1.Equals(null))
+            if (userCards.Count() == 1)
             {
                 userCards.Add(u.CC1);
             }
-            if (!u.CC2.Equals(null))
+            if (userCards.Count() ==2)
             {
                 userCards.Add(u.CC2);
+            }
+            else
+            {
+                CreditCard newCC = new CreditCard();
+                newCC.CCNumber = "12345";
+                userCards.Add(newCC);
             }
             //create list
             SelectList list = new SelectList(userCards, "CreditCardID", "displayNumber");
@@ -360,31 +366,34 @@ namespace Team9.Controllers
         {
 
             CreditCard testCard = db.Creditcards.Find(CreditCardID);
-            if (ModelState.IsValid && (checkCard(newCardNumber) && newCard) && (!newCard && testCard.CardType != CreditCard.CCType.None))
+            if (ModelState.IsValid )
             {
                 Purchase currentPurchase = db.Purchases.Find(Purchase.PurchaseID);
-                foreach(PurchaseItem pi in currentPurchase.PurchaseItems)
+                if ((checkCard(newCardNumber) && newCard) || (!newCard && testCard.CardType != CreditCard.CCType.None))
                 {
-                    if (pi.isAlbum)
+                    foreach (PurchaseItem pi in currentPurchase.PurchaseItems)
                     {
-                        if (pi.PurchaseItemAlbum.isDiscounted)
+                        if (pi.isAlbum)
                         {
-                            pi.PurchaseItemPrice = pi.PurchaseItemAlbum.DiscountAlbumPrice;
+                            if (pi.PurchaseItemAlbum.isDiscounted)
+                            {
+                                pi.PurchaseItemPrice = pi.PurchaseItemAlbum.DiscountAlbumPrice;
+                            }
+                            else
+                            {
+                                pi.PurchaseItemPrice = pi.PurchaseItemAlbum.AlbumPrice;
+                            }
                         }
                         else
                         {
-                            pi.PurchaseItemPrice = pi.PurchaseItemAlbum.AlbumPrice;
-                        }
-                    }
-                    else
-                    {
-                        if (pi.PurchaseItemSong.isDiscoutned)
-                        {
-                            pi.PurchaseItemPrice = pi.PurchaseItemSong.DiscountPrice;
-                        }
-                        else
-                        {
-                            pi.PurchaseItemPrice = pi.PurchaseItemSong.SongPrice;
+                            if (pi.PurchaseItemSong.isDiscoutned)
+                            {
+                                pi.PurchaseItemPrice = pi.PurchaseItemSong.DiscountPrice;
+                            }
+                            else
+                            {
+                                pi.PurchaseItemPrice = pi.PurchaseItemSong.SongPrice;
+                            }
                         }
                     }
                 }
@@ -473,30 +482,34 @@ namespace Team9.Controllers
         {
             CreditCard testCard = db.Creditcards.Find(CreditCardID);
             Purchase currentPurchase = db.Purchases.Find(Purchase.PurchaseID);
-            if (ModelState.IsValid && (checkCard(newCardNumber) && newCard) && (!newCard && testCard.CardType != CreditCard.CCType.None))
+            if (ModelState.IsValid)
             {
-                foreach (PurchaseItem pi in currentPurchase.PurchaseItems)
+                
+                if ((checkCard(newCardNumber) && newCard) || (!newCard && testCard.CardType != CreditCard.CCType.None))
                 {
-                    if (pi.isAlbum)
+                    foreach (PurchaseItem pi in currentPurchase.PurchaseItems)
                     {
-                        if (pi.PurchaseItemAlbum.isDiscounted)
+                        if (pi.isAlbum)
                         {
-                            pi.PurchaseItemPrice = pi.PurchaseItemAlbum.DiscountAlbumPrice;
+                            if (pi.PurchaseItemAlbum.isDiscounted)
+                            {
+                                pi.PurchaseItemPrice = pi.PurchaseItemAlbum.DiscountAlbumPrice;
+                            }
+                            else
+                            {
+                                pi.PurchaseItemPrice = pi.PurchaseItemAlbum.AlbumPrice;
+                            }
                         }
                         else
                         {
-                            pi.PurchaseItemPrice = pi.PurchaseItemAlbum.AlbumPrice;
-                        }
-                    }
-                    else
-                    {
-                        if (pi.PurchaseItemSong.isDiscoutned)
-                        {
-                            pi.PurchaseItemPrice = pi.PurchaseItemSong.DiscountPrice;
-                        }
-                        else
-                        {
-                            pi.PurchaseItemPrice = pi.PurchaseItemSong.SongPrice;
+                            if (pi.PurchaseItemSong.isDiscoutned)
+                            {
+                                pi.PurchaseItemPrice = pi.PurchaseItemSong.DiscountPrice;
+                            }
+                            else
+                            {
+                                pi.PurchaseItemPrice = pi.PurchaseItemSong.SongPrice;
+                            }
                         }
                     }
                 }
