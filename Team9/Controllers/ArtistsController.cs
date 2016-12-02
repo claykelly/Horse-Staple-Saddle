@@ -211,7 +211,8 @@ namespace Team9.Controllers
         // GET: Artists/Create
         public ActionResult Create()
         {
-            return View();
+            Artist artist = new Artist();
+            return View(artist);
         }
 
         // POST: Artists/Create
@@ -219,16 +220,16 @@ namespace Team9.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ArtistID,ArtistName")] Artist artist)
+        public ActionResult Create([Bind(Include = "ArtistID,ArtistName,isFeatured")] Artist @artist)
         {
             if (ModelState.IsValid)
             {
-                db.Artists.Add(artist);
+                db.Artists.Add(@artist);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Edit", new { id = @artist.ArtistID });
             }
 
-            return View(artist);
+            return View(@artist);
         }
 
         // GET: Artists/Edit/5

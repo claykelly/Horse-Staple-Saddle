@@ -252,7 +252,8 @@ namespace Team9.Controllers
         // GET: Albums/Create
         public ActionResult Create()
         {
-            return View();
+            Album album = new Album();
+            return View(album);
         }
 
         // POST: Albums/Create
@@ -260,16 +261,17 @@ namespace Team9.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "AlbumID,AlbumName,AlbumPrice")] Album album)
+        public ActionResult Create([Bind(Include = "AlbumID,AlbumName,AlbumPrice,isDiscounted,isFeatured,DiscountAlbumPrice")]
+                                    Album @album)
         {
             if (ModelState.IsValid)
             {
-                db.Albums.Add(album);
+                db.Albums.Add(@album);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Edit", new {id = @album.AlbumID });
             }
 
-            return View(album);
+            return View(@album);
         }
 
         // GET: Albums/Edit/5

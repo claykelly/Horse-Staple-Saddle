@@ -278,7 +278,7 @@ namespace Team9.Controllers
             ViewBag.AllArtist = GetAllArtist(@song);
             ViewBag.AllGenres = GetAllGenres(@song);
 
-            return View(song);
+            return View(@song);
         }        
 
         // GET: Songs/Edit/5
