@@ -15,7 +15,6 @@ using System.Net.Mail;
 
 namespace Team9.Controllers
 {
-    [Authorize]
     public class PurchasesController : Controller
     {
         private AppDbContext db = new AppDbContext();
@@ -76,20 +75,8 @@ namespace Team9.Controllers
         public void getCards(AppUser u)
         {
             List<CreditCard> userCards = new List<CreditCard>();
-            if (userCards.Count() == 1)
-            {
-                userCards.Add(u.CC1);
-            }
-            if (userCards.Count() ==2)
-            {
-                userCards.Add(u.CC2);
-            }
-            else
-            {
-                CreditCard newCC = new CreditCard();
-                newCC.CCNumber = "12345";
-                userCards.Add(newCC);
-            }
+            userCards.Add(u.CC1);
+            userCards.Add(u.CC2);
             //create list
             SelectList list = new SelectList(userCards, "CreditCardID", "displayNumber");
             ViewBag.AllCards = list;
@@ -965,6 +952,7 @@ namespace Team9.Controllers
                 sivm.Song = s;
                 songReports.Add(sivm);
             }
+            songReports = songReports.OrderByDescending(x => x.songRevenue).ToList();
             return View(songReports);
         }
 
@@ -995,6 +983,7 @@ namespace Team9.Controllers
                 aivm.Album = a;
                 AlbumReports.Add(aivm);
             }
+            AlbumReports = AlbumReports.OrderByDescending(x => x.AlbumRevenue).ToList();
             return View(AlbumReports);
         }
 
@@ -1069,6 +1058,7 @@ namespace Team9.Controllers
                 }
                 grvmList.Add(grvm);
             }
+            grvmList = grvmList.OrderByDescending(x => x.albumRev).ToList();
             return View(grvmList);
         }
         public ActionResult thankYou(Purchase purchase)
@@ -1231,7 +1221,7 @@ namespace Team9.Controllers
             }
             db.Purchases.Remove(cancelPurchase);
             db.SaveChanges();
-            EmailMessage email = new EmailMessage();
+            Team9.Messaging.EmailMessage email = new Team9.Messaging.EmailMessage();
             var client = new SmtpClient("smtp.gmail.com", 587)
             {
                 Credentials = new NetworkCredential("longhornmusic0@gmail.com", "shanebuechele"),

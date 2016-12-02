@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Team9.Models.SongReportViewModel >
+﻿@model IEnumerable<SongReportViewModel >
 @using Team9.Models
 
 @{
@@ -15,7 +15,7 @@
             @Html.DisplayNameFor(model => model.Song.SongName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Song.SongAlbum.AlbumName)
+            @Html.DisplayNameFor(model => model.Song.SongAlbums )
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Song.SongArtist)
@@ -39,7 +39,10 @@
                     @Html.DisplayFor(modelItem => item.Song.SongName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Song.SongAlbum.AlbumName)
+                    @foreach (Album a in item.Song.SongAlbums)
+                    {
+                        <span>@a.AlbumName *</span>
+                    }
                 </td>
                 <td>
                     @foreach (Artist a in item.Song.SongArtist)
