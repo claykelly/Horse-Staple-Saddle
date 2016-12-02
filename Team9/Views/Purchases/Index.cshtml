@@ -143,13 +143,14 @@
             </td>
 
             <td>
-                @if (item.PurchaseItem.PurchaseItemAlbum.isDiscounted )
+                @if (item.PurchaseItem.PurchaseItemAlbum.isDiscounted)
                 {
-                    @Html.DisplayFor(modelItem => item.PurchaseItem.PurchaseItemAlbum.DiscountAlbumPrice)
+                    <span class="red"> @Html.DisplayFor(modelItem => item.PurchaseItem.PurchaseItemAlbum.DiscountAlbumPrice)</span>
+                    <span>(</span>@Html.DisplayFor(modelItem => item.PurchaseItem.PurchaseItemAlbum.AlbumPrice)<span>)</span>
                 }
                 else
                 {
-                    @Html.DisplayFor(modelItem => item.PurchaseItem.PurchaseItemAlbum.AlbumPrice)
+                    @Html.DisplayFor(modelItem => item.PurchaseItem.PurchaseItemSong.SongPrice)
                 }
             </td>
 

@@ -332,8 +332,20 @@ namespace Team9.Controllers
                 AppUser CurrentUser = db.Users.Find(CurrentUserId);
                 //get Cards
                 getCards(CurrentUser);
+                PVM.purchaserName = CurrentUser.Email;
                 return View("Details", PVM);
             }
+        }
+
+        public bool checkCard(string card)
+        {
+            CreditCard Card = new CreditCard();
+            Card.CCNumber = card;
+            if (Card.CCNumber.Length < 15 || Card.CCNumber.Length > 16 || Card.CardType == CreditCard.CCType.None)
+            {
+                return false;
+            }
+            return true;
         }
 
         //POST for Purchase
@@ -341,7 +353,8 @@ namespace Team9.Controllers
         public ActionResult Details(PurchaseViewModel Purchase, Int32 CreditCardID, bool newCard, string newCardNumber)
         {
 
-            if (ModelState.IsValid)
+            CreditCard testCard = db.Creditcards.Find(CreditCardID);
+            if (ModelState.IsValid && (checkCard(newCardNumber) && newCard) && (!newCard && testCard.CardType != CreditCard.CCType.None))
             {
                 Purchase currentPurchase = db.Purchases.Find(Purchase.PurchaseID);
                 foreach(PurchaseItem pi in currentPurchase.PurchaseItems)
@@ -394,7 +407,10 @@ namespace Team9.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
+            String CurrentUserId2 = User.Identity.GetUserId();
+            AppUser currentUser = db.Users.Find(CurrentUserId2);
+            getCards(currentUser);
+            Purchase.error = "Please enter valid card";
             return View(Purchase);
         }
 
@@ -438,6 +454,7 @@ namespace Team9.Controllers
                 //create list and execute query
                 AppUser CurrentUser = db.Users.Find(CurrentUserId);
                 getCards(CurrentUser);
+                PVM.purchaserName = CurrentUser.Email;
                 return View("Gift", PVM);
             }
         }
@@ -446,8 +463,9 @@ namespace Team9.Controllers
         [HttpPost]
         public ActionResult Gift(PurchaseViewModel Purchase, Int32 CreditCardID, bool newCard, string newCardNumber, string giftEmail)
         {
+            CreditCard testCard = db.Creditcards.Find(CreditCardID);
             Purchase currentPurchase = db.Purchases.Find(Purchase.PurchaseID);
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && (checkCard(newCardNumber) && newCard) && (!newCard && testCard.CardType != CreditCard.CCType.None))
             {
                 foreach (PurchaseItem pi in currentPurchase.PurchaseItems)
                 {
@@ -525,6 +543,10 @@ namespace Team9.Controllers
             }
 
             PurchaseViewModel PVM2 = calcPVM(currentPurchase);
+            String CurrentUserId2 = User.Identity.GetUserId();
+            AppUser currentUser = db.Users.Find(CurrentUserId2);
+            getCards(currentUser);
+            PVM2.error = "Please enter valid card";
             return View("Gift", PVM2);
         }
 
@@ -729,7 +751,7 @@ namespace Team9.Controllers
 
             List<Genre> allGenres = query.ToList();
             List<GenreReportViewModel> grvmList = new List<GenreReportViewModel>();
-            foreach(Genre g in allGenres)
+            foreach (Genre g in allGenres)
             {
                 GenreReportViewModel grvm = new GenreReportViewModel();
                 grvm.totalRev = 0.ToString("c");
@@ -739,7 +761,7 @@ namespace Team9.Controllers
                 grvm.topArtist = "N/A";
                 grvm.Genre = g;
                 Decimal topRevenue = 0;
-                foreach(Artist a in g.GenreArtists )
+                foreach (Artist a in g.GenreArtists)
                 {
                     Int32 artistSongPurchaseCount = 0;
                     Int32 artistAlbumPurchaseCount = 0;
@@ -769,7 +791,7 @@ namespace Team9.Controllers
                         }
                     }
                     artistSongPurchaseCount = songsPurchased.Count();
-                    foreach(PurchaseItem pi in songsPurchased)
+                    foreach (PurchaseItem pi in songsPurchased)
                     {
                         artistSongRev += pi.PurchaseItemPrice;
                     }
@@ -779,7 +801,7 @@ namespace Team9.Controllers
                         artistAlbumRev += pi.PurchaseItemPrice;
                     }
                     totalArtistRev = artistAlbumRev + artistSongRev;
-                    if(totalArtistRev > topRevenue)
+                    if (totalArtistRev > topRevenue)
                     {
                         topRevenue = totalArtistRev;
                         grvm.topArtist = a.ArtistName;

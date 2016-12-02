@@ -57,6 +57,11 @@ namespace Team9.Models
         public String newCardNumber { get; set; }
 
         public String giftRecipient { get; set; }
+
+        public String error { get; set; }
+
+        public String purchaserName { get; set; }
+    }
     }
 
     public class SongReportViewModel

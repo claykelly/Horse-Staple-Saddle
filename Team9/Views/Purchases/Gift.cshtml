@@ -23,8 +23,25 @@
         </div>
     }
 
+    if (Model.error != null)
+    {
+        <div class="alert alert-warning">
+            <strong>
+                @Model.error
+            </strong>
+        </div>
+    } 
+
     <div class="form-horizontal">
         <dl class="dl-horizontal">
+
+            <dt>
+                @Html.LabelFor(model => model.purchaserName, htmlAttributes: new { @class = "control-label col-md-2" })
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.purchaserName)
+            </dd>
+
             <dt>
                 @Html.LabelFor(model => model.subtotal, htmlAttributes: new { @class = "control-label col-md-2" })
             </dt>
