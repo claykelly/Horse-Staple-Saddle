@@ -114,7 +114,7 @@ namespace Team9.Controllers
             else //they picked something
             {
                 //use linq to display searched names
-                SelectedSongs = query.Where(a => a.SongName.Contains(SongString) || a.SongArtist.Any(r => r.ArtistName.Contains(SongString)) || a.SongAlbum.AlbumName.Contains(SongString)).ToList();
+                SelectedSongs = query.Where(a => a.SongName.Contains(SongString) || a.SongArtist.Any(r => r.ArtistName.Contains(SongString)) || a.SongAlbums.Any(x => x.AlbumName.Contains(SongString))).ToList();
 
                 //Create selected count of customers
                 ViewBag.SelectedSongCount = SelectedSongs.Count();
@@ -285,7 +285,7 @@ namespace Team9.Controllers
                     //new AlbumID
                     Album SelectedAlbum = db.Albums.Find(AlbumID);
                     //update album
-                    songToAdd.SongAlbum = SelectedAlbum;
+                    songToAdd.SongAlbums[0] = SelectedAlbum;
                 }
                 //if there are members to add then add them
                 if (SelectedArtist != null)
@@ -359,12 +359,15 @@ namespace Team9.Controllers
             {
                 Song songToChange = db.Songs.Find(song.SongID);
                 //change album if necessary
-                if (songToChange.SongAlbum.AlbumID != AlbumID)
+                foreach (Album a in songToChange.SongAlbums)
                 {
-                    //find AlbumID
-                    Album SelectedAlbum = db.Albums.Find(AlbumID);
-                    //update album
-                    songToChange.SongAlbum = SelectedAlbum;
+                    if (a.AlbumID != AlbumID)
+                    {
+                        //find AlbumID
+                        Album SelectedAlbum = db.Albums.Find(AlbumID);
+                        //update album
+                        songToChange.SongAlbums.Add(SelectedAlbum);
+                    }
                 }
 
                 //change members
@@ -512,7 +515,7 @@ namespace Team9.Controllers
             else //they picked something up
             {
                 ViewBag.SongSearchString = "The search string is" + SongSearchString;
-                query = query.Where((a => a.SongName.Contains(SongSearchString) || a.SongArtist.Any(r => r.ArtistName.Contains(SongSearchString)) || a.SongAlbum.AlbumName.Contains(SongSearchString)));
+                query = query.Where((a => a.SongName.Contains(SongSearchString) || a.SongArtist.Any(r => r.ArtistName.Contains(SongSearchString)) || a.SongAlbums.Any(x => x.AlbumName.Contains(SongSearchString))));
             }
 
             if (SelectedGenre == null) //nothing was selected

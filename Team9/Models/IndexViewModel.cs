@@ -121,4 +121,3 @@ namespace Team9.Models
 
         public String AlbumRating { get; set; }
     }
-}

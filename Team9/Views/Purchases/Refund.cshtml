@@ -29,7 +29,7 @@
             @Html.DisplayNameFor(model => model.PurchaseItem.PurchaseItemSong.SongName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PurchaseItem.PurchaseItemSong.SongAlbum.AlbumName)
+            @Html.DisplayNameFor(model => model.PurchaseItem.PurchaseItemSong.SongAlbums )
         </th>
         <th>
             @Html.DisplayNameFor(model => model.PurchaseItem.PurchaseItemSong.SongArtist)
@@ -57,7 +57,7 @@
                     @Html.DisplayFor(modelItem => item.PurchaseItem.PurchaseItemSong.SongName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PurchaseItem.PurchaseItemSong.SongAlbum.AlbumName)
+                    @Html.DisplayFor(modelItem => item.PurchaseItem.PurchaseItemSong.SongAlbums)
                 </td>
                 <td>
                     @foreach (Artist a in item.PurchaseItem.PurchaseItemSong.SongArtist)

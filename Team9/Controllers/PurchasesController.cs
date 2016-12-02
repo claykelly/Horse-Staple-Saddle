@@ -604,11 +604,14 @@ namespace Team9.Controllers
 
                 foreach (Song s in mySongs)
                 {
-                    if (s.SongAlbum != null)
+                    if (s.SongAlbums != null)
                     {
-                        if (s.SongAlbum.AlbumName.Contains(SongString))
+                        foreach (Album a in s.SongAlbums)
                         {
-                            DisplaySongs.Add(s);
+                            if (a.AlbumName.Contains(SongString))
+                            {
+                                DisplaySongs.Add(s);
+                            }
                         }
                     }
                 }
@@ -718,17 +721,19 @@ namespace Team9.Controllers
 
                 foreach (Song s in mySongs)
                 {
-                    if (s.SongAlbum != null)
+                    foreach (Album a in s.SongAlbums)
                     {
-                        if (s.SongAlbum.AlbumName.Contains(SongSearchString))
+                        if (a != null)
                         {
-                            String strSelectedGenre = "The selected genre(s) is/are: ";
+                            if (a.AlbumName.Contains(SongSearchString))
+                            {
+                                String strSelectedGenre = "The selected genre(s) is/are: ";
 
-                            //get list of genres
-                            ViewBag.AllGenres = GetAllGenres();
+                                //get list of genres
+                                ViewBag.AllGenres = GetAllGenres();
 
-                            //foreach (Song x in mySongs) // loop through all songs in mySongs
-                            //{
+                                //foreach (Song x in mySongs) // loop through all songs in mySongs
+                                //{
                                 foreach (int GenreID in SelectedGenre) // check each song on mySong against each genreID in SelectedGenre
                                 {
                                     if (s.SongGenre.Any(g => g.GenreID == GenreID)) //if any SongGenres on eachs in mysongs
@@ -736,11 +741,12 @@ namespace Team9.Controllers
                                         DisplaySongs.Add(s);
                                     }
                                 }
-                            //}
-                            ViewBag.SelectedGenre = strSelectedGenre;
+                                //}
+                                ViewBag.SelectedGenre = strSelectedGenre;
+                            }
                         }
+                        return View("MyMusic", DisplaySongs);
                     }
-                    return View("MyMusic", DisplaySongs);
                 }
 
                 if (SelectedGenre == null) //no genre was selected
@@ -757,11 +763,14 @@ namespace Team9.Controllers
 
                     foreach (Song s in mySongs)
                     {
-                        if (s.SongAlbum != null)
+                        foreach (Album a in s.SongAlbums)
                         {
-                            if (s.SongAlbum.AlbumName.Contains(SongSearchString))
+                            if (a != null)
                             {
-                                DisplaySongs.Add(s);
+                                if (a.AlbumName.Contains(SongSearchString))
+                                {
+                                    DisplaySongs.Add(s);
+                                }
                             }
                         }
                     }

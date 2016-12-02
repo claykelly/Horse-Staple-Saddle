@@ -278,6 +278,10 @@
     <Compile Include="Migrations\201612020108565_team9.11.Designer.cs">
       <DependentUpon>201612020108565_team9.11.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612021141228_Team9.13.cs" />
+    <Compile Include="Migrations\201612021141228_Team9.13.Designer.cs">
+      <DependentUpon>201612021141228_Team9.13.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\Artist.cs" />
@@ -353,6 +357,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612020108565_team9.11.resx">
       <DependentUpon>201612020108565_team9.11.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612021141228_Team9.13.resx">
+      <DependentUpon>201612021141228_Team9.13.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
