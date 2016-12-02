@@ -89,8 +89,7 @@ namespace Team9.Controllers
             else //they picked something
             {
                 //use linq to display searched names
-                SelectedAlbums = query.Where(a => a.AlbumName.Contains(AlbumString) || a.AlbumArtist.Any(r => r.ArtistName == AlbumString)).ToList();
-
+                SelectedAlbums = query.Where(a => a.AlbumName.Contains(AlbumString) || a.AlbumArtist.Any(r => r.ArtistName.Contains(AlbumString))).ToList();
                 //Create selected count of customers
                 ViewBag.SelectedAlbumCount = SelectedAlbums.Count();
 
@@ -459,7 +458,7 @@ namespace Team9.Controllers
             else //they picked something up
             {
                 ViewBag.AlbumSearchString = "The search string is" + AlbumSearchString;
-                query = query.Where(a => a.AlbumName.Contains(AlbumSearchString) || a.AlbumArtist.Any(r => r.ArtistName == AlbumSearchString));
+                query = query.Where(a => a.AlbumName.Contains(AlbumSearchString) || a.AlbumArtist.Any(r => r.ArtistName.Contains(AlbumSearchString)));
             }
 
             if (SelectedGenre == null) //nothing was selected

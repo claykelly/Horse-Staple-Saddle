@@ -114,7 +114,7 @@ namespace Team9.Controllers
             else //they picked something
             {
                 //use linq to display searched names
-                SelectedSongs = query.Where(a => a.SongName.Contains(SongString) || a.SongArtist.Any(r => r.ArtistName == SongString) || a.SongAlbum.AlbumName.Equals(SongString)).ToList();
+                SelectedSongs = query.Where(a => a.SongName.Contains(SongString) || a.SongArtist.Any(r => r.ArtistName.Contains(SongString)) || a.SongAlbum.AlbumName.Contains(SongString)).ToList();
 
                 //Create selected count of customers
                 ViewBag.SelectedSongCount = SelectedSongs.Count();
@@ -342,7 +342,6 @@ namespace Team9.Controllers
                 songToChange.SongPrice = song.SongPrice;
                 songToChange.SongLength = song.SongLength;
                 songToChange.SongRatings = song.SongRatings;
-                songToChange.SongGenre = song.SongGenre;
                 songToChange.isDiscoutned = song.isDiscoutned;
                 songToChange.isFeatured = song.isFeatured;
                 songToChange.DiscountPrice = song.DiscountPrice;
@@ -456,7 +455,7 @@ namespace Team9.Controllers
             else //they picked something up
             {
                 ViewBag.SongSearchString = "The search string is" + SongSearchString;
-                query = query.Where(a => a.SongName.Contains(SongSearchString) || a.SongArtist.Any(r => r.ArtistName == SongSearchString));
+                query = query.Where((a => a.SongName.Contains(SongSearchString) || a.SongArtist.Any(r => r.ArtistName.Contains(SongSearchString)) || a.SongAlbum.AlbumName.Contains(SongSearchString)));
             }
 
             if (SelectedGenre == null) //nothing was selected
