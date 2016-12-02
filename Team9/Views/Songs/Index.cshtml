@@ -5,7 +5,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Songs</h2>
 
 <p>
     @using (Html.BeginForm())
@@ -35,7 +35,7 @@
             @Html.DisplayNameFor(model => model.Song.SongPrice)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Song.SongLength)
+            @Html.DisplayNameFor(model => model.Song.SongGenre)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Song.SongAlbum.AlbumName )
@@ -58,7 +58,10 @@
             @Html.DisplayFor(modelItem => item.Song.SongPrice)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Song.SongLength)
+            @foreach(Genre g in item.Song.SongGenre)
+            {
+                <span>@Html.DisplayFor(modelItem => g.GenreName) *</span>
+            }            
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Song.SongAlbum.AlbumName )
