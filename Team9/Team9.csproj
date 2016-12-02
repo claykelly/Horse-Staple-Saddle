@@ -234,53 +234,15 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Messaging\EmailMessage.cs" />
-    <Compile Include="Migrations\201611241826196_Team9.1.cs" />
-    <Compile Include="Migrations\201611241826196_Team9.1.Designer.cs">
-      <DependentUpon>201611241826196_Team9.1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611251606484_Team9.2.cs" />
-    <Compile Include="Migrations\201611251606484_Team9.2.Designer.cs">
-      <DependentUpon>201611251606484_Team9.2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611272324493_Team9.3.cs" />
-    <Compile Include="Migrations\201611272324493_Team9.3.Designer.cs">
-      <DependentUpon>201611272324493_Team9.3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611290058331_9.4.cs" />
-    <Compile Include="Migrations\201611290058331_9.4.Designer.cs">
-      <DependentUpon>201611290058331_9.4.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611290128351_Team9.5.cs" />
-    <Compile Include="Migrations\201611290128351_Team9.5.Designer.cs">
-      <DependentUpon>201611290128351_Team9.5.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611290135362_Team9.6.cs" />
-    <Compile Include="Migrations\201611290135362_Team9.6.Designer.cs">
-      <DependentUpon>201611290135362_Team9.6.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611290348355_Team9.7.cs" />
-    <Compile Include="Migrations\201611290348355_Team9.7.Designer.cs">
-      <DependentUpon>201611290348355_Team9.7.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611290358115_Team9.8.cs" />
-    <Compile Include="Migrations\201611290358115_Team9.8.Designer.cs">
-      <DependentUpon>201611290358115_Team9.8.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611291759217_Team9.9.cs" />
-    <Compile Include="Migrations\201611291759217_Team9.9.Designer.cs">
-      <DependentUpon>201611291759217_Team9.9.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611291903249_Team9.10.cs" />
-    <Compile Include="Migrations\201611291903249_Team9.10.Designer.cs">
-      <DependentUpon>201611291903249_Team9.10.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201612020108565_team9.11.cs" />
-    <Compile Include="Migrations\201612020108565_team9.11.Designer.cs">
-      <DependentUpon>201612020108565_team9.11.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201612021141228_Team9.13.cs" />
-    <Compile Include="Migrations\201612021141228_Team9.13.Designer.cs">
-      <DependentUpon>201612021141228_Team9.13.cs</DependentUpon>
+    <Compile Include="Migrations\201612020048583_Team9.0.cs" />
+    <Compile Include="Migrations\201612020048583_Team9.0.Designer.cs" />
+    <Compile Include="Migrations\201612020234572_Team9.1.cs" />
+    <Compile Include="Migrations\201612020234572_Team9.1.Designer.cs" />
+    <Compile Include="Migrations\201612020712321_Team9.2.cs" />
+    <Compile Include="Migrations\201612020712321_Team9.2.Designer.cs" />
+    <Compile Include="Migrations\201612021235261_Team9.4.cs" />
+    <Compile Include="Migrations\201612021235261_Team9.4.Designer.cs">
+      <DependentUpon>201612021235261_Team9.4.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Album.cs" />
@@ -326,41 +288,11 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201611241826196_Team9.1.resx">
-      <DependentUpon>201611241826196_Team9.1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611251606484_Team9.2.resx">
-      <DependentUpon>201611251606484_Team9.2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611272324493_Team9.3.resx">
-      <DependentUpon>201611272324493_Team9.3.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611290058331_9.4.resx">
-      <DependentUpon>201611290058331_9.4.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611290128351_Team9.5.resx">
-      <DependentUpon>201611290128351_Team9.5.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611290135362_Team9.6.resx">
-      <DependentUpon>201611290135362_Team9.6.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611290348355_Team9.7.resx">
-      <DependentUpon>201611290348355_Team9.7.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611290358115_Team9.8.resx">
-      <DependentUpon>201611290358115_Team9.8.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611291759217_Team9.9.resx">
-      <DependentUpon>201611291759217_Team9.9.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611291903249_Team9.10.resx">
-      <DependentUpon>201611291903249_Team9.10.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612020108565_team9.11.resx">
-      <DependentUpon>201612020108565_team9.11.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612021141228_Team9.13.resx">
-      <DependentUpon>201612021141228_Team9.13.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201612020048583_Team9.0.resx" />
+    <EmbeddedResource Include="Migrations\201612020234572_Team9.1.resx" />
+    <EmbeddedResource Include="Migrations\201612020712321_Team9.2.resx" />
+    <EmbeddedResource Include="Migrations\201612021235261_Team9.4.resx">
+      <DependentUpon>201612021235261_Team9.4.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

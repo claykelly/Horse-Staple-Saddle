@@ -6,14 +6,14 @@ namespace Team9.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    [GeneratedCode("EntityFramework.Migrations", "6.1.0-30225")]
-    public sealed partial class Team99 : IMigrationMetadata
+    [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
+    public sealed partial class Team91 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Team99));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Team91));
         
         string IMigrationMetadata.Id
         {
-            get { return "201611291759217_Team9.9"; }
+            get { return "201612020234572_Team9.1"; }
         }
         
         string IMigrationMetadata.Source

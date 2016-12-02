@@ -3,7 +3,7 @@ namespace Team9.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Team912 : DbMigration
+    public partial class Team91 : DbMigration
     {
         public override void Up()
         {

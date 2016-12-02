@@ -3,7 +3,7 @@ namespace Team9.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Team91 : DbMigration
+    public partial class Team90 : DbMigration
     {
         public override void Up()
         {
@@ -25,14 +25,8 @@ namespace Team9.Migrations
                     {
                         ArtistID = c.Int(nullable: false, identity: true),
                         ArtistName = c.String(nullable: false),
-                        Song_SongID = c.Int(),
-                        Album_AlbumID = c.Int(),
                     })
-                .PrimaryKey(t => t.ArtistID)
-                .ForeignKey("dbo.Songs", t => t.Song_SongID)
-                .ForeignKey("dbo.Albums", t => t.Album_AlbumID)
-                .Index(t => t.Song_SongID)
-                .Index(t => t.Album_AlbumID);
+                .PrimaryKey(t => t.ArtistID);
             
             CreateTable(
                 "dbo.Genres",
@@ -40,17 +34,24 @@ namespace Team9.Migrations
                     {
                         GenreID = c.Int(nullable: false, identity: true),
                         GenreName = c.String(),
-                        Artist_ArtistID = c.Int(),
-                        Song_SongID = c.Int(),
-                        Album_AlbumID = c.Int(),
                     })
-                .PrimaryKey(t => t.GenreID)
-                .ForeignKey("dbo.Artists", t => t.Artist_ArtistID)
-                .ForeignKey("dbo.Songs", t => t.Song_SongID)
-                .ForeignKey("dbo.Albums", t => t.Album_AlbumID)
-                .Index(t => t.Artist_ArtistID)
-                .Index(t => t.Song_SongID)
-                .Index(t => t.Album_AlbumID);
+                .PrimaryKey(t => t.GenreID);
+            
+            CreateTable(
+                "dbo.Songs",
+                c => new
+                    {
+                        SongID = c.Int(nullable: false, identity: true),
+                        SongName = c.String(nullable: false),
+                        SongPrice = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        isDiscoutned = c.Boolean(nullable: false),
+                        DiscountPrice = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        SongLength = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        SongAlbum_AlbumID = c.Int(),
+                    })
+                .PrimaryKey(t => t.SongID)
+                .ForeignKey("dbo.Albums", t => t.SongAlbum_AlbumID)
+                .Index(t => t.SongAlbum_AlbumID);
             
             CreateTable(
                 "dbo.Ratings",
@@ -75,34 +76,15 @@ namespace Team9.Migrations
                 .Index(t => t.User_Id);
             
             CreateTable(
-                "dbo.Songs",
-                c => new
-                    {
-                        SongID = c.Int(nullable: false, identity: true),
-                        SongName = c.String(nullable: false),
-                        SongPrice = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        isDiscoutned = c.Boolean(nullable: false),
-                        DiscountPrice = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        SongLength = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        SongAlbum_AlbumID = c.Int(),
-                    })
-                .PrimaryKey(t => t.SongID)
-                .ForeignKey("dbo.Albums", t => t.SongAlbum_AlbumID)
-                .Index(t => t.SongAlbum_AlbumID);
-            
-            CreateTable(
                 "dbo.AspNetUsers",
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
                         FName = c.String(),
                         LName = c.String(),
-                        CreditCard1 = c.String(),
-                        CCType1 = c.Int(nullable: false),
-                        CreditCard2 = c.String(),
-                        CCType2 = c.Int(nullable: false),
                         SSN = c.String(),
                         City = c.String(),
+                        State = c.String(),
                         StreeAddress = c.String(),
                         Zip = c.String(),
                         Email = c.String(maxLength: 256),
@@ -116,9 +98,27 @@ namespace Team9.Migrations
                         LockoutEnabled = c.Boolean(nullable: false),
                         AccessFailedCount = c.Int(nullable: false),
                         UserName = c.String(nullable: false, maxLength: 256),
+                        CC1_CreditCardID = c.Int(),
+                        CC2_CreditCardID = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
-                .Index(t => t.UserName, unique: true, name: "UserNameIndex");
+                .ForeignKey("dbo.CreditCards", t => t.CC1_CreditCardID)
+                .ForeignKey("dbo.CreditCards", t => t.CC2_CreditCardID)
+                .Index(t => t.UserName, unique: true, name: "UserNameIndex")
+                .Index(t => t.CC1_CreditCardID)
+                .Index(t => t.CC2_CreditCardID);
+            
+            CreateTable(
+                "dbo.CreditCards",
+                c => new
+                    {
+                        CreditCardID = c.Int(nullable: false, identity: true),
+                        CCNumber = c.String(),
+                        CardOwner_Id = c.String(maxLength: 128),
+                    })
+                .PrimaryKey(t => t.CreditCardID)
+                .ForeignKey("dbo.AspNetUsers", t => t.CardOwner_Id)
+                .Index(t => t.CardOwner_Id);
             
             CreateTable(
                 "dbo.AspNetUserClaims",
@@ -154,14 +154,17 @@ namespace Team9.Migrations
                         PurchaseDate = c.DateTime(),
                         isGift = c.Boolean(nullable: false),
                         GiftUser_Id = c.String(maxLength: 128),
+                        PurchaseCard_CreditCardID = c.Int(),
                         PurchaseUser_Id = c.String(maxLength: 128),
                         AppUser_Id = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.PurchaseID)
                 .ForeignKey("dbo.AspNetUsers", t => t.GiftUser_Id)
+                .ForeignKey("dbo.CreditCards", t => t.PurchaseCard_CreditCardID)
                 .ForeignKey("dbo.AspNetUsers", t => t.PurchaseUser_Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.AppUser_Id)
                 .Index(t => t.GiftUser_Id)
+                .Index(t => t.PurchaseCard_CreditCardID)
                 .Index(t => t.PurchaseUser_Id)
                 .Index(t => t.AppUser_Id);
             
@@ -208,13 +211,76 @@ namespace Team9.Migrations
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.Name, unique: true, name: "RoleNameIndex");
             
+            CreateTable(
+                "dbo.ArtistAlbums",
+                c => new
+                    {
+                        Artist_ArtistID = c.Int(nullable: false),
+                        Album_AlbumID = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.Artist_ArtistID, t.Album_AlbumID })
+                .ForeignKey("dbo.Artists", t => t.Artist_ArtistID, cascadeDelete: true)
+                .ForeignKey("dbo.Albums", t => t.Album_AlbumID, cascadeDelete: true)
+                .Index(t => t.Artist_ArtistID)
+                .Index(t => t.Album_AlbumID);
+            
+            CreateTable(
+                "dbo.GenreAlbums",
+                c => new
+                    {
+                        Genre_GenreID = c.Int(nullable: false),
+                        Album_AlbumID = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.Genre_GenreID, t.Album_AlbumID })
+                .ForeignKey("dbo.Genres", t => t.Genre_GenreID, cascadeDelete: true)
+                .ForeignKey("dbo.Albums", t => t.Album_AlbumID, cascadeDelete: true)
+                .Index(t => t.Genre_GenreID)
+                .Index(t => t.Album_AlbumID);
+            
+            CreateTable(
+                "dbo.GenreArtists",
+                c => new
+                    {
+                        Genre_GenreID = c.Int(nullable: false),
+                        Artist_ArtistID = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.Genre_GenreID, t.Artist_ArtistID })
+                .ForeignKey("dbo.Genres", t => t.Genre_GenreID, cascadeDelete: true)
+                .ForeignKey("dbo.Artists", t => t.Artist_ArtistID, cascadeDelete: true)
+                .Index(t => t.Genre_GenreID)
+                .Index(t => t.Artist_ArtistID);
+            
+            CreateTable(
+                "dbo.SongArtists",
+                c => new
+                    {
+                        Song_SongID = c.Int(nullable: false),
+                        Artist_ArtistID = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.Song_SongID, t.Artist_ArtistID })
+                .ForeignKey("dbo.Songs", t => t.Song_SongID, cascadeDelete: true)
+                .ForeignKey("dbo.Artists", t => t.Artist_ArtistID, cascadeDelete: true)
+                .Index(t => t.Song_SongID)
+                .Index(t => t.Artist_ArtistID);
+            
+            CreateTable(
+                "dbo.SongGenres",
+                c => new
+                    {
+                        Song_SongID = c.Int(nullable: false),
+                        Genre_GenreID = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.Song_SongID, t.Genre_GenreID })
+                .ForeignKey("dbo.Songs", t => t.Song_SongID, cascadeDelete: true)
+                .ForeignKey("dbo.Genres", t => t.Genre_GenreID, cascadeDelete: true)
+                .Index(t => t.Song_SongID)
+                .Index(t => t.Genre_GenreID);
+            
         }
         
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.Genres", "Album_AlbumID", "dbo.Albums");
-            DropForeignKey("dbo.Artists", "Album_AlbumID", "dbo.Albums");
             DropForeignKey("dbo.Ratings", "User_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Purchases", "AppUser_Id", "dbo.AspNetUsers");
@@ -222,16 +288,37 @@ namespace Team9.Migrations
             DropForeignKey("dbo.PurchaseItems", "PurchaseItemSong_SongID", "dbo.Songs");
             DropForeignKey("dbo.PurchaseItems", "PurchaseItemAlbum_AlbumID", "dbo.Albums");
             DropForeignKey("dbo.PurchaseItems", "Purchase_PurchaseID", "dbo.Purchases");
+            DropForeignKey("dbo.Purchases", "PurchaseCard_CreditCardID", "dbo.CreditCards");
             DropForeignKey("dbo.Purchases", "GiftUser_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.AspNetUsers", "CC2_CreditCardID", "dbo.CreditCards");
+            DropForeignKey("dbo.AspNetUsers", "CC1_CreditCardID", "dbo.CreditCards");
+            DropForeignKey("dbo.CreditCards", "CardOwner_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.Ratings", "RatingSong_SongID", "dbo.Songs");
-            DropForeignKey("dbo.Genres", "Song_SongID", "dbo.Songs");
-            DropForeignKey("dbo.Artists", "Song_SongID", "dbo.Songs");
-            DropForeignKey("dbo.Songs", "SongAlbum_AlbumID", "dbo.Albums");
             DropForeignKey("dbo.Ratings", "RatingArtist_ArtistID", "dbo.Artists");
             DropForeignKey("dbo.Ratings", "RatingAlbum_AlbumID", "dbo.Albums");
-            DropForeignKey("dbo.Genres", "Artist_ArtistID", "dbo.Artists");
+            DropForeignKey("dbo.SongGenres", "Genre_GenreID", "dbo.Genres");
+            DropForeignKey("dbo.SongGenres", "Song_SongID", "dbo.Songs");
+            DropForeignKey("dbo.SongArtists", "Artist_ArtistID", "dbo.Artists");
+            DropForeignKey("dbo.SongArtists", "Song_SongID", "dbo.Songs");
+            DropForeignKey("dbo.Songs", "SongAlbum_AlbumID", "dbo.Albums");
+            DropForeignKey("dbo.GenreArtists", "Artist_ArtistID", "dbo.Artists");
+            DropForeignKey("dbo.GenreArtists", "Genre_GenreID", "dbo.Genres");
+            DropForeignKey("dbo.GenreAlbums", "Album_AlbumID", "dbo.Albums");
+            DropForeignKey("dbo.GenreAlbums", "Genre_GenreID", "dbo.Genres");
+            DropForeignKey("dbo.ArtistAlbums", "Album_AlbumID", "dbo.Albums");
+            DropForeignKey("dbo.ArtistAlbums", "Artist_ArtistID", "dbo.Artists");
+            DropIndex("dbo.SongGenres", new[] { "Genre_GenreID" });
+            DropIndex("dbo.SongGenres", new[] { "Song_SongID" });
+            DropIndex("dbo.SongArtists", new[] { "Artist_ArtistID" });
+            DropIndex("dbo.SongArtists", new[] { "Song_SongID" });
+            DropIndex("dbo.GenreArtists", new[] { "Artist_ArtistID" });
+            DropIndex("dbo.GenreArtists", new[] { "Genre_GenreID" });
+            DropIndex("dbo.GenreAlbums", new[] { "Album_AlbumID" });
+            DropIndex("dbo.GenreAlbums", new[] { "Genre_GenreID" });
+            DropIndex("dbo.ArtistAlbums", new[] { "Album_AlbumID" });
+            DropIndex("dbo.ArtistAlbums", new[] { "Artist_ArtistID" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
@@ -240,29 +327,34 @@ namespace Team9.Migrations
             DropIndex("dbo.PurchaseItems", new[] { "Purchase_PurchaseID" });
             DropIndex("dbo.Purchases", new[] { "AppUser_Id" });
             DropIndex("dbo.Purchases", new[] { "PurchaseUser_Id" });
+            DropIndex("dbo.Purchases", new[] { "PurchaseCard_CreditCardID" });
             DropIndex("dbo.Purchases", new[] { "GiftUser_Id" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
+            DropIndex("dbo.CreditCards", new[] { "CardOwner_Id" });
+            DropIndex("dbo.AspNetUsers", new[] { "CC2_CreditCardID" });
+            DropIndex("dbo.AspNetUsers", new[] { "CC1_CreditCardID" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
-            DropIndex("dbo.Songs", new[] { "SongAlbum_AlbumID" });
             DropIndex("dbo.Ratings", new[] { "User_Id" });
             DropIndex("dbo.Ratings", new[] { "RatingSong_SongID" });
             DropIndex("dbo.Ratings", new[] { "RatingArtist_ArtistID" });
             DropIndex("dbo.Ratings", new[] { "RatingAlbum_AlbumID" });
-            DropIndex("dbo.Genres", new[] { "Album_AlbumID" });
-            DropIndex("dbo.Genres", new[] { "Song_SongID" });
-            DropIndex("dbo.Genres", new[] { "Artist_ArtistID" });
-            DropIndex("dbo.Artists", new[] { "Album_AlbumID" });
-            DropIndex("dbo.Artists", new[] { "Song_SongID" });
+            DropIndex("dbo.Songs", new[] { "SongAlbum_AlbumID" });
+            DropTable("dbo.SongGenres");
+            DropTable("dbo.SongArtists");
+            DropTable("dbo.GenreArtists");
+            DropTable("dbo.GenreAlbums");
+            DropTable("dbo.ArtistAlbums");
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.PurchaseItems");
             DropTable("dbo.Purchases");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
+            DropTable("dbo.CreditCards");
             DropTable("dbo.AspNetUsers");
-            DropTable("dbo.Songs");
             DropTable("dbo.Ratings");
+            DropTable("dbo.Songs");
             DropTable("dbo.Genres");
             DropTable("dbo.Artists");
             DropTable("dbo.Albums");

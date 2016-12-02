@@ -11,6 +11,7 @@ using System.Net.Mail;
 using System.Collections.Generic;
 using System;
 using System.Net;
+using System.Linq;
 
 
 //TODOXX: Change the namespace here to match your project's name
@@ -19,6 +20,7 @@ namespace Team9.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private AppDbContext db = new AppDbContext();
         public enum ManageMessageId
         {
             AddPhoneSuccess,
@@ -312,5 +314,19 @@ namespace Team9.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
+
+        private ActionResult manageCustomers()
+        {
+            var query = from u in db.Users
+                        where u.Roles.Any(x => x.RoleId.Equals("096aafc1-7274-4852-b283-512567c469c4"))
+                        select u;
+
+            List<AppUser> Customers = query.ToList();
+
+            return View("manageCustomers");
+        }
+
+
+
     }
 }
