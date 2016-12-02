@@ -12,6 +12,7 @@ using System.Net.Mail;
 
 
 
+
 namespace Team9.Controllers
 {
     public class PurchasesController : Controller
@@ -1048,7 +1049,7 @@ namespace Team9.Controllers
             AppUser emailRecipient = new AppUser();
             if (purchase.isGift)
             {
-                emailRecipient = purchase.GiftUser;
+                emailRecipient = purchase.PurchaseUser;
             }
             else
             {
@@ -1082,26 +1083,11 @@ namespace Team9.Controllers
                     recArtist = a;
                 }
             }
-            EmailMessage email = new EmailMessage();
-            //Add our website here
-            var client = new SmtpClient("smtp.gmail.com", 587)
-            {
-                Credentials = new NetworkCredential("longhornmusic0@gmail.com", "shanebuechele"),
-                EnableSsl = true
-            };
+            Team9.Messaging.EmailMessage email= new Team9.Messaging.EmailMessage();
+            email.confirmPurchaseEmail(emailRecipient,purchase,recArtist);
 
 
-            MailMessage mm = new MailMessage();
-
-            //TODO: AFTER PUBLISH put in website
-            String refundLink = "www.ourwebsite.com/Purchases/Refund/" + purchase.PurchaseID.ToString();
-            String emailSubject = "Team9" + emailRecipient.FName + " " + emailRecipient.LName + " Order #" + purchase.PurchaseID.ToString() + " Details";
-            String emailBody = "Dear" + emailRecipient.FName + ",\nYour Order is Confirmed. We also recommend you check out " + recArtist.ArtistName + " if this order is a mistake, click this link" + refundLink;
-            mm.Subject = emailSubject;
-            mm.From = new MailAddress("longhornmusic0@gmail.com", "Team 9");
-            mm.To.Add(new MailAddress(emailRecipient.Email));
-            mm.Body = emailBody;
-            client.Send(mm);
+            
             return RedirectToAction("Index", "Songs");
         }
 
