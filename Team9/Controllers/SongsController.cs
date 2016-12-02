@@ -353,22 +353,21 @@ namespace Team9.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "SongID,SongName,SongPrice,SongLength,isDiscoutned,isFeatured,DiscountPrice")]
-                                    Song song, int AlbumID, int[] SelectedArtist, int[] SelectedGenre)
+                                    Song song, int[] SelectedAlbums, int[] SelectedArtist, int[] SelectedGenre)
         {
             if (ModelState.IsValid)
             {
                 Song songToChange = db.Songs.Find(song.SongID);
                 //change album if necessary
-                foreach (Album a in songToChange.SongAlbums)
-                {
-                    if (a.AlbumID != AlbumID)
+
+                    if (SelectedAlbums != null)
                     {
-                        //find AlbumID
-                        Album SelectedAlbum = db.Albums.Find(AlbumID);
-                        //update album
-                        songToChange.SongAlbums.Add(SelectedAlbum);
+                        foreach (int AlbumID in SelectedAlbums)
+                        {
+                            Album albumToAdd = db.Albums.Find(AlbumID);
+                            songToChange.SongAlbums.Add(albumToAdd);
+                        }
                     }
-                }
 
                 //change members
                 //remove any existing artist
@@ -565,14 +564,14 @@ namespace Team9.Controllers
                     {
                         SongIndexViewModel ab = new SongIndexViewModel();
                         ab.Song = a;
-                        ab.SongRating = d.ToString();
+                        ab.SongRating = d.ToString("0.0");
                         SongsDisplay_ascend.Add(ab);
                     }
                     else
                     {
                         SongIndexViewModel ab = new SongIndexViewModel();
                         ab.Song = a;
-                        ab.SongRating = d.ToString();
+                        ab.SongRating = d.ToString("0.0");
                         SongsDisplay_descend.Add(ab);
                     }
                 }
@@ -600,7 +599,7 @@ namespace Team9.Controllers
                 Decimal d = getAverageRating(a.SongID);
                 SongIndexViewModel ab = new SongIndexViewModel();
                 ab.Song = a;
-                ab.SongRating = d.ToString();
+                ab.SongRating = d.ToString("0.0");
                 SongsList.Add(ab);
             }
 
@@ -661,7 +660,7 @@ namespace Team9.Controllers
             return AllArtist;
         }
 
-        public SelectList GetAllAlbums(Song @song)
+        public MultiSelectList GetAllAlbums(Song @song)
         {
             var query = from g in db.Albums
                         orderby g.AlbumName
@@ -675,7 +674,7 @@ namespace Team9.Controllers
             AlbumList.Add(NoChoice);
 
             //convert to Selectlist
-            SelectList AllAlbums = new SelectList(AlbumList, "AlbumID", "AlbumName");
+            MultiSelectList AllAlbums = new MultiSelectList(AlbumList, "AlbumID", "AlbumName");
 
             return AllAlbums;
         }
