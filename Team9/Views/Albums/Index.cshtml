@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Team9.Models.AlbumIndexViewModel>
+    @using Team9.Models
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @using (Html.BeginForm())
+    {
+    <p class="form-group">
+        Search: @Html.TextBox("AlbumString", null, new { @class = "form-control" }) <br />
+        <input type="submit" value="Search" class="btn btn-default" />
+        @Html.ActionLink("Advanced Search", "AlbumDetailedSearch", null, new { @class = "btn btn-default" })
+        @Html.ActionLink("Show All", "Index", null, new { @class = "btn btn-default" })
+    </p>
+    }
+
+    @Html.ActionLink("Create New", "Create")
+    </p>
+
+    <p>Displaying @ViewBag.SelectedAlbumCount of @ViewBag.TotalAlbumCount <p />
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Album.AlbumName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Album.AlbumPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Album.AlbumArtist)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Album.AlbumGenre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AlbumRating)
+            </th>
+
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Album.AlbumName, "Details", new { id = item.Album.AlbumID })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Album.AlbumPrice)
+                </td>
+
+                <td>
+                    @foreach (Artist a in item.Album.AlbumArtist)
+                {
+                        <span>@a.ArtistName *</span>
+                    }
+                </td>
+                <td>
+                    @foreach (Genre g in item.Album.AlbumGenre)
+                {
+                        <span>@g.GenreName *</span>
+                    }
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.AlbumRating)
+                </td>
+
+
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Album.AlbumID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Album.AlbumID })
+                </td>
+
+
+
+
+            </tr>
+
+
+        }
+
+    </table>
