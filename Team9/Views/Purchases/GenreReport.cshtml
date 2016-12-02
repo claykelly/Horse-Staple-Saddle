@@ -1,5 +1,4 @@
-﻿@model IEnumerable<Team9.Models.GenreReportViewModel >
-@using Team9.Models
+﻿@model IEnumerable<GenreReportViewModel>
 
 @{
     ViewBag.Title = "Index";
@@ -12,7 +11,7 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Genre.GenreName )
+            @Html.DisplayNameFor(model => model.Genre.GenreName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.topArtist)
@@ -37,33 +36,32 @@
 
     @foreach (var item in Model)
     {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Genre.GenreName )
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.topArtist )
-                </td>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Genre.GenreName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.topArtist)
+            </td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.songCount )
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.songRev ) 
-                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.songCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.songRev)
+            </td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.albumCount )
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.albumRev)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.totalRev)
-                </td>
-            </tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.albumCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.albumRev)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.totalRev)
+            </td>
+        </tr>
     }
 
 </table>
-
 

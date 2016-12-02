@@ -33,6 +33,5 @@ namespace Team9.Models
 
         public virtual List<Rating> AlbumRatings { get; set; }
 
-
     }
 }

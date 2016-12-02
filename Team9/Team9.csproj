@@ -314,6 +314,7 @@
     <Content Include="Views\Purchases\MyMusicDetailedSearch.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Purchases\Refund.cshtml" />
+    <Content Include="Views\Purchases\GenreReport.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
