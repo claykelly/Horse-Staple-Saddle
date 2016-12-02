@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Team9.Models;
 using Microsoft.AspNet.Identity;
+using System.Net;
 
 //XXTODO: Change the namespace here to match your project's name
 namespace Team9.Controllers
@@ -12,6 +13,55 @@ namespace Team9.Controllers
     public class HomeController : Controller
     {
         private AppDbContext db = new AppDbContext();
+
+        //GET manageCustomers
+        public ActionResult manageCustomers()
+        {
+            var query = from u in db.Users
+                        where u.Roles.Any(x => x.RoleId.Equals("096aafc1-7274-4852-b283-512567c469c4"))
+                        select u;
+
+            List<AppUser> Customers = query.ToList();
+
+            return View(Customers);
+        }
+
+        //GET: Edit
+        public ActionResult Edit(String id)
+        {
+            if (String.IsNullOrEmpty(id))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            AppUser user = db.Users.Find(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            if (user.Id != User.Identity.GetUserId() && !User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            return View(user);
+        }
+
+        [HttpPost]
+        public ActionResult Edit([Bind(Include = "Id,FName,LName,Email,EmailConfirmed,StreeAddress,PhoneNumber")] AppUser user)
+        {
+            AppUser SelectedUser = db.Users.Find(user.Id);
+            if (ModelState.IsValid)
+            {
+                SelectedUser.FName = user.FName;
+                SelectedUser.LName = user.LName;
+                SelectedUser.Email = user.Email;
+                SelectedUser.EmailConfirmed = user.EmailConfirmed;
+                SelectedUser.StreeAddress = user.StreeAddress;
+                SelectedUser.PhoneNumber = user.PhoneNumber;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(user);
+        }
 
         // Get: Featured Items
         public ActionResult Index()
@@ -158,5 +208,7 @@ namespace Team9.Controllers
         //####################################################################################//
         //      end of average functions                                                      //
         //####################################################################################//
+
+        //GET: Customers
     }
 }

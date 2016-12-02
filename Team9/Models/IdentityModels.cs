@@ -71,6 +71,8 @@ namespace Team9.Models
 
         public System.Data.Entity.DbSet<Team9.Models.CreditCard> Creditcards { get; set; }
 
+        //public System.Data.Entity.DbSet<Team9.Models.AppUser> AppUsers { get; set; }
 
+        //public System.Data.Entity.DbSet<Team9.Models.AppUser> AppUsers { get; set; }
     }
 }
