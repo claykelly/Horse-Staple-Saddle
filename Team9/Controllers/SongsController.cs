@@ -250,7 +250,13 @@ namespace Team9.Controllers
         // GET: Songs/Create
         public ActionResult Create()
         {
-            return View();
+            Song song = new Song();
+            ViewBag.AllAlbums = GetAllAlbums(@song);
+            ViewBag.AllArtist = GetAllArtist(@song);
+            ViewBag.AllGenres = GetAllGenres(@song);
+
+            return View(song);
+        
         }
 
         // POST: Songs/Create
@@ -258,17 +264,68 @@ namespace Team9.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SongID,SongName,SongPrice,SongLength")] Song song)
+        public ActionResult Create([Bind(Include = "SongID,SongName,SongPrice,SongLength,isDiscoutned,isFeatured,DiscountPrice")]
+                                        Song song, int? AlbumID, int[] SelectedArtist, int[] SelectedGenre)
         {
+            //if (ModelState.IsValid)
+            //{
+            //    db.Songs.Add(song);
+            //    db.SaveChanges();
+            //    return RedirectToAction("Index");
+            //}
+
+            //return View(song);
+
+
             if (ModelState.IsValid)
             {
-                db.Songs.Add(song);
+                Song songToAdd = song;
+                if (AlbumID != 0)
+                {
+                    //new AlbumID
+                    Album SelectedAlbum = db.Albums.Find(AlbumID);
+                    //update album
+                    songToAdd.SongAlbum = SelectedAlbum;
+                }
+                //if there are members to add then add them
+                if (SelectedArtist != null)
+                {
+                    foreach (int ArtistID in SelectedArtist)
+                    {
+                        Artist artistToAdd = db.Artists.Find(ArtistID);
+                        songToAdd.SongArtist.Add(artistToAdd);
+                    }
+                }
+
+                //if there are genres to add then add them
+                if (SelectedGenre != null)
+                {
+                    foreach (int GenreID in SelectedGenre)
+                    {
+                        Genre genreToAdd = db.Genres.Find(GenreID);
+                        songToAdd.SongGenre.Add(genreToAdd);
+                    }
+                }
+
+                songToAdd.SongName = song.SongName;
+                songToAdd.SongPrice = song.SongPrice;
+                songToAdd.SongLength = song.SongLength;
+                songToAdd.SongRatings = song.SongRatings;
+                songToAdd.isDiscoutned = song.isDiscoutned;
+                songToAdd.isFeatured = song.isFeatured;
+                songToAdd.DiscountPrice = song.DiscountPrice;
+
+                db.Entry(songToAdd).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
+
             }
+            ViewBag.AllAlbums = GetAllAlbums(@song);
+            ViewBag.AllArtist = GetAllArtist(@song);
+            ViewBag.AllGenres = GetAllGenres(@song);
 
             return View(song);
-        }
+        }        
 
         // GET: Songs/Edit/5
         public ActionResult Edit(int? id)
@@ -610,6 +667,9 @@ namespace Team9.Controllers
             //convert to list
             List<Album> AlbumList = query.ToList();
 
+            // make "all albums"
+            Album NoChoice = new Album() { AlbumID = 0, AlbumName = "No Album" };
+            AlbumList.Add(NoChoice);
 
             //convert to Selectlist
             SelectList AllAlbums = new SelectList(AlbumList, "AlbumID", "AlbumName");

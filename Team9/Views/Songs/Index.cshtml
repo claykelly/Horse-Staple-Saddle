@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<Team9.Models.SongIndexViewModel>
     @using Team9.Models
+    @using Microsoft.AspNet.Identity
 
 @{
     ViewBag.Title = "Index";
@@ -20,7 +21,10 @@
     }
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @if (User.IsInRole("Manager"))
+    {
+        @Html.ActionLink("Create New", "Create")
+    }
 </p>
 
 <p>Displaying @ViewBag.SelectedSongCount of @ViewBag.TotalSongCount <p />
