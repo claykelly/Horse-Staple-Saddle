@@ -1,22 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 using Team9.Models;
 
-
-public class EmailMessage
+public class EmailMessaging
 {
-    public static void confirmEmail(String toEmailAddress, Purchase p)
+    public static void confirmPurchaseEmail(AppUser a, Purchase p, Artist recArtist)
+    {
+        if (p.isGift == true)
+        {
+            string destinationEmail = a.Email;
+            string refundLink = "www.ourwebsite.com/Purchases/Refund/" + p.PurchaseID.ToString();
+            string emailSubject = "Team9" + a.FName + " " + a.LName + " Order #" + p.PurchaseID.ToString() + " Details";
+            string emailBody = "Dear" + a.FName + ",\nYour Order you gifted to " + p.GiftUser.FName + " is Confirmed. We also recommend you check out " + recArtist.ArtistName + " if this order is a mistake, click this link " + refundLink;
+            SendEmail(destinationEmail, emailSubject, emailBody);
+
+            string dest = a.GiftUser.Email;
+            string emailSubjectGuest = "Team9" + a.GiftUser.FName + " " + a.GiftUser.LName + " Order #" + purchase.PurchaseID.ToString() + " Details";
+            string emailBody = "Dear" + a.FName + ",\nYour Gifted Order From " + a.Fname + "is Confirmed. We also recommend you check out " + recArtist.ArtistName + " if this order is a mistake, click this link www.ourwebsite.com/Purchases/Refund/" + refundLink;
+            SendEmail(destinationEmail, emailSubject, emailBody);
+        }
+        else
+        {
+            string destinationEmail = a.Email;
+            string refundLink = "www.ourwebsite.com/Purchases/Refund/" + purchase.PurchaseID.ToString();
+            string emailSubject = "Team9" + a.FName + " " + a.LName + " Order #" + purchase.PurchaseID.ToString() + " Details";
+            string emailBody = "Dear" + a.FName + ",\nYour Order is Confirmed. We also recommend you check out " + recArtist.ArtistName + " if this order is a mistake, click this link www.ourwebsite.com/Purchases/Refund/" + refundLink;
+            SendEmail(destinationEmail, emailSubject, emailBody);
+        }
+
+
+    }
+    public static void confirmRegistrationEmail(AppUser a, Purchase p)
     {
 
     }
-    public static void giftEmail(String toEmailAddress, Purchase p)
-    {
 
-    }
     public static void SendEmail(String toEmailAddress, String emailSubject, String emailBody)
     {
         //create an email client to send emails
@@ -31,12 +49,12 @@ public class EmailMessage
         String finalMessage = emailBody + "\n\n This is a disclaimer that will be on all messages";
 
         //create an email address object for the sender address
-        MailAddress senderEmail = new MailAddress("mydummyemail@gmail.com", "Team 9");
+        MailAddress senderEmail = new MailAddress("longhornmusic0@gmail.com", "Team 9");
 
         MailMessage mm = new MailMessage();
         mm.Subject = emailSubject;
         mm.From = senderEmail;
-        mm.To.Add(new MailAddress(toEmailAddress));
+        mm.To.Add(new MailAddress("longhornmusic0@gmail.com"));
         mm.Body = finalMessage;
         client.Send(mm);
     }
